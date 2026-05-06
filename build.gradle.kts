@@ -123,11 +123,10 @@ rootProject.extensions.configure<WasmYarnRootEnvSpec>("kotlinWasmYarnSpec") {
 
 rootProject.extensions.configure<YarnRootExtension>("kotlinYarn") {
     resolution("diff", "8.0.3")
-    resolution("serialize-javascript", "7.0.5")
-    resolution("webpack", "5.106.2")
-
     resolution("**/diff", "8.0.3")
+    resolution("serialize-javascript", "7.0.5")
     resolution("**/serialize-javascript", "7.0.5")
+    resolution("webpack", "5.106.2")
     resolution("**/webpack", "5.106.2")
     resolution("follow-redirects", "1.16.0")
     resolution("**/follow-redirects", "1.16.0")
@@ -169,14 +168,14 @@ mavenPublishing {
 
     pom {
         name.set("ed25519-dalek-kotlin")
-        description.set("Kotlin Multiplatform port of the Rust crate `ed25519-dalek` — Ed25519 digital signatures")
+        description.set("Kotlin Multiplatform port of dalek-cryptography/curve25519-dalek - Fast and efficient ed25519 EdDSA key generations, signing, and verification in pure Rust")
         inceptionYear.set("2026")
         url.set("https://github.com/KotlinMania/ed25519-dalek-kotlin")
 
         licenses {
             license {
-                name.set("Apache-2.0")
-                url.set("https://opensource.org/licenses/Apache-2.0")
+                name.set("BSD-3-Clause")
+                url.set("https://opensource.org/licenses/BSD-3-Clause")
                 distribution.set("repo")
             }
         }
@@ -196,4 +195,18 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://github.com/KotlinMania/ed25519-dalek-kotlin.git")
         }
     }
+}
+
+tasks.register("test") {
+    group = "verification"
+    description =
+        "Runs a portable test suite (macOS + JS + WasmJS). Android and non-host native targets are intentionally excluded."
+
+    val defaultTestTasks = listOf(
+        "macosArm64Test",
+        "jsNodeTest",
+        "wasmJsNodeTest",
+    )
+
+    dependsOn(defaultTestTasks.mapNotNull { taskName -> tasks.findByName(taskName) })
 }

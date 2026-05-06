@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ed25519-dalek-kotlin"
+
