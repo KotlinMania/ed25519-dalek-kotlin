@@ -58,7 +58,7 @@ with the following additional clauses:
 
 ```kotlin
 dependencies {
-    implementation("io.github.kotlinmania:ed25519-dalek-kotlin:0.1.0-SNAPSHOT")
+    implementation("io.github.kotlinmania:ed25519-dalek-kotlin:0.1.0")
 }
 ```
 
