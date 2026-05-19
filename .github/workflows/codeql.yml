@@ -17,8 +17,8 @@ name: "CodeQL Advanced"
 # for that language:
 #
 #   1. JDK + Gradle setup (the other two languages need no toolchain).
-#   2. A direct `./gradlew codeqlCompileJvm` invocation under
-#      JAVA_TOOL_OPTIONS=-javaagent:codeql-java-agent.jar=java,kotlin.
+#   2. A direct `./gradlew codeqlCompileJvm` invocation with the CodeQL
+#      Java agent path written into Gradle properties.
 #
 # `codeqlCompileJvm` is a JavaExec task in build.gradle.kts that runs
 # kotlin-compiler-embeddable 2.3.21 against commonMain as a single-target
@@ -92,18 +92,12 @@ jobs:
           dependency-caching: true
 
       # Manual build: only java-kotlin gates this. The CodeQL Java agent
-      # is attached to every JVM in this step via JAVA_TOOL_OPTIONS -- every
-      # conforming JVM honors -javaagent at startup independently of any
-      # OS-level LD_PRELOAD tracing chain. The `java,kotlin` spec registers
-      # both JavacMainInterceptor and KotlinInterceptor; the latter hooks
-      # `K2JVMCompiler.doExecute(...)` at class load time and writes
-      # per-source-file `*.kt.trap.gz` outputs under
-      # ${CODEQL_EXTRACTOR_JAVA_TRAP_DIR}.
+      # path is materialized as a Gradle property, and the codeqlCompileJvm
+      # JavaExec task owns the resulting -javaagent JVM argument.
       - name: Run manual build steps
         if: matrix.build-mode == 'manual'
         run: |
-          export JAVA_TOOL_OPTIONS="-javaagent:${CODEQL_EXTRACTOR_JAVA_ROOT}/tools/codeql-java-agent.jar=java,kotlin"
-          echo "JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}"
+          printf '\ncodeql.javaAgentPath=%s/tools/codeql-java-agent.jar\n' "${CODEQL_EXTRACTOR_JAVA_ROOT}" >> gradle.properties
           ./gradlew --no-daemon codeqlCompileJvm --no-configuration-cache
 
       - name: Perform CodeQL Analysis

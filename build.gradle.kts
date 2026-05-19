@@ -454,6 +454,11 @@ val codeqlCompileJvm = tasks.register<JavaExec>("codeqlCompileJvm") {
     outputs.dir(sentinelDir)
 
     doFirst {
+        providers.gradleProperty("codeql.javaAgentPath").orNull
+            ?.takeIf { it.isNotBlank() }
+            ?.let { javaAgentPath ->
+                jvmArgs("-javaagent:$javaAgentPath=java,kotlin")
+            }
         outDir.get().asFile.mkdirs()
         val extractedJars = mutableListOf<File>()
         for (aar in codeqlAndroidAar.resolve()) {
