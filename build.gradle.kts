@@ -423,8 +423,8 @@ val codeqlAndroidAar: Configuration by configurations.creating {
 }
 
 dependencies {
-    codeqlKotlinc("org.jetbrains.kotlin:kotlin-compiler-embeddable:2.3.21")
-    codeqlSourceClasspath("org.jetbrains.kotlin:kotlin-stdlib:2.3.21")
+    codeqlKotlinc("org.jetbrains.kotlin:kotlin-compiler-embeddable:2.3.20")
+    codeqlSourceClasspath("org.jetbrains.kotlin:kotlin-stdlib:2.3.20")
     codeqlSourceClasspath("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0")
     codeqlSourceClasspath("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.11.0")
     codeqlSourceClasspath("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0")
@@ -434,7 +434,7 @@ dependencies {
 
 val codeqlCompileJvm = tasks.register<JavaExec>("codeqlCompileJvm") {
     description =
-        "Compile commonMain Kotlin sources with kotlinc 2.3.21 for CodeQL Java/Kotlin extraction."
+        "Compile commonMain Kotlin sources with kotlinc 2.3.20 for CodeQL Java/Kotlin extraction."
     group = "verification"
 
     classpath(codeqlKotlinc)
@@ -454,11 +454,6 @@ val codeqlCompileJvm = tasks.register<JavaExec>("codeqlCompileJvm") {
     outputs.dir(sentinelDir)
 
     doFirst {
-        providers.gradleProperty("codeql.javaAgentPath").orNull
-            ?.takeIf { it.isNotBlank() }
-            ?.let { javaAgentPath ->
-                jvmArgs("-javaagent:$javaAgentPath=java,kotlin")
-            }
         outDir.get().asFile.mkdirs()
         val extractedJars = mutableListOf<File>()
         for (aar in codeqlAndroidAar.resolve()) {
@@ -503,8 +498,6 @@ val codeqlCompileJvm = tasks.register<JavaExec>("codeqlCompileJvm") {
             "-no-reflect",
             "-language-version", "2.3",
             "-api-version", "2.3",
-            "-Xmulti-platform",
-            "-Xcommon-sources=${commonSourceFiles.joinToString(",") { it.absolutePath }}",
             "-Xexpect-actual-classes",
             "-opt-in", "kotlin.time.ExperimentalTime",
             "-opt-in", "kotlin.concurrent.atomics.ExperimentalAtomicApi",
