@@ -1,7 +1,6 @@
 {
   "type": "port",
   "name": "ed25519-dalek-kotlin",
-  "parity_mode": false,
   "source": {
     "path": "tmp/ed25519-dalek/src",
     "lang": "rust"
