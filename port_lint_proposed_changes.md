@@ -1,6 +1,6 @@
 # port-lint Proposed Changes
 
-**Generated:** 2026-08-23
+**Generated:** 2026-08-24
 **Source:** tmp/ed25519-dalek/src
 **Target:** src/commonMain/kotlin
 
