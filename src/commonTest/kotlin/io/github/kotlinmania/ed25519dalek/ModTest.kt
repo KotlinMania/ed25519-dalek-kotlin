@@ -1,0 +1,12 @@
+// port-lint: tests lib.rs
+package io.github.kotlinmania.ed25519dalek
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class ModTest {
+    @Test
+    fun testKeyAlgorithmConstant() {
+        assertEquals("Ed25519", ED25519_KEY_ALGORITHM)
+    }
+}
