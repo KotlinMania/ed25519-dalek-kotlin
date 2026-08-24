@@ -4,14 +4,14 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 0/10 (0.0%)
-- **Function parity:** 0/123 matched — 0.0%
-- **Class/type parity:** 0/22 matched — 0.0%
-- **Combined symbol parity:** 0/145 matched — 0.0%
-- **Average inline-code cosine:** 0.00 (function body across 0 matched files)
-- **Average documentation cosine:** 0.00 (doc text across 0 matched files)
-- **Cheat-zeroed Files:** 0
-- **Critical Issues:** 0 files with <0.60 function similarity
+- **Files Present:** 3/10 (30.0%)
+- **Function parity:** 4/122 matched (target 14) — 3.3%
+- **Class/type parity:** 3/22 matched (target 11) — 13.6%
+- **Combined symbol parity:** 7/144 matched (target 25) — 4.9%
+- **Average inline-code cosine:** 0.26 (function body across 3 matched files)
+- **Average documentation cosine:** 0.87 (doc text across 3 matched files)
+- **Cheat-zeroed Files:** 1
+- **Critical Issues:** 2 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -27,6 +27,40 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
+### 1. context
+
+- **Target:** `ed25519dalek.Context`
+- **Similarity:** 0.63
+- **Dependents:** 3
+- **Priority Score:** 3010503.8
+- **Functions:** 3/4 matched (target 3)
+- **Missing functions:** `context_correctness`
+- **Types:** 1/1 matched
+- **Missing types:** _none_
+- **Tests:** 0/1 matched
+
+### 2. constants
+
+- **Target:** `ed25519dalek.Constants [ZERO]`
+- **Similarity:** 0.00
+- **Dependents:** 1
+- **Priority Score:** 1000010.0
+- **Functions:** 0/0 matched (target 1)
+- **Missing functions:** _none_
+- **Types:** 0/0 matched (target 1)
+- **Missing types:** _none_
+
+### 3. errors
+
+- **Target:** `ed25519dalek.Errors`
+- **Similarity:** 0.15
+- **Dependents:** 0
+- **Priority Score:** 10408.5
+- **Functions:** 1/2 matched (target 10)
+- **Missing functions:** `fmt`
+- **Types:** 2/2 matched (target 9)
+- **Missing types:** _none_
+
 ## Success Criteria
 
 For each file to be considered "complete":
@@ -36,16 +70,6 @@ For each file to be considered "complete":
 - Documentation ported
 - port-lint header present
 
-## Next Commands
-
-```bash
-# Initialize task queue for systematic porting
-cd tools/ast_distance
-./ast_distance --init-tasks ../../tmp/ed25519-dalek/src rust ../../src/commonMain/kotlin/io/github/kotlinmania/ed25519dalek kotlin tasks.json ../../AGENTS.md
-
-# Get next high-priority task
-./ast_distance --assign tasks.json <agent-id>
-```
 ## Reexport / Wiring Modules
 
 These files match `reexport_modules` patterns in `.ast_distance_config.json`. They are filtered out of
