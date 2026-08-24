@@ -18,10 +18,10 @@ const val PUBLIC_KEY_LENGTH: Int = 32
 const val KEYPAIR_LENGTH: Int = SECRET_KEY_LENGTH + PUBLIC_KEY_LENGTH
 
 /** The length of the "key" portion of an "expanded" ed25519 secret key, in bytes. */
-private const val EXPANDED_SECRET_KEY_KEY_LENGTH: Int = 32
+const val EXPANDED_SECRET_KEY_KEY_LENGTH: Int = 32
 
 /** The length of the "nonce" portion of an "expanded" ed25519 secret key, in bytes. */
-private const val EXPANDED_SECRET_KEY_NONCE_LENGTH: Int = 32
+const val EXPANDED_SECRET_KEY_NONCE_LENGTH: Int = 32
 
 /** The length of an "expanded" ed25519 key, `ExpandedSecretKey`, in bytes. */
 const val EXPANDED_SECRET_KEY_LENGTH: Int =
