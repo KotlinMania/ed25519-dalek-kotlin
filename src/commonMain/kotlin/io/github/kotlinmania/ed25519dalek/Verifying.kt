@@ -41,7 +41,47 @@ class VerifyingKey internal constructor(
         }
 
         fun fromSigningKey(signingKey: SigningKey): VerifyingKey = signingKey.verifyingKey()
+
+        /** Construct a [VerifyingKey] from SPKI public key DER bytes. */
+        fun fromPublicKeyDer(der: ByteArray): VerifyingKey {
+            val marker = byteArrayOf(0x06, 0x03, 0x2b, 0x65, 0x70, 0x03, 0x21, 0x00)
+            var idx = -1
+            for (i in 0..(der.size - marker.size - 32)) {
+                var match = true
+                for (j in marker.indices) {
+                    if (der[i + j] != marker[j]) {
+                        match = false
+                        break
+                    }
+                }
+                if (match) {
+                    idx = i + marker.size
+                    break
+                }
+            }
+            if (idx < 0) {
+                throw SignatureError.from(InternalError.Verify)
+            }
+            val pub = der.copyOfRange(idx, idx + 32)
+            return fromBytes(pub)
+        }
     }
+
+    /** Convert this public key to SPKI public key DER bytes. */
+    fun toPublicKeyDer(): ByteArray {
+        val prefix = byteArrayOf(
+            0x30, 0x2a, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x03, 0x21, 0x00,
+        )
+        return prefix + asBytes()
+    }
+
+    /** Returns the signature algorithm identifier for PKCS#8 / SPKI. */
+    fun signatureAlgorithmIdentifier(): AlgorithmIdentifier =
+        AlgorithmIdentifier(oid = "1.3.101.112", parameters = null)
+
+    /** Create a verifying context for prehashed verification. */
+    fun withContext(contextValue: ByteArray): Context<VerifyingKey> =
+        Context.new(this, contextValue)
 
     /** Convert this public key to a byte array. */
     fun toBytes(): ByteArray = compressed.asBytes()

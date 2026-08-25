@@ -50,6 +50,12 @@ class ExpandedSecretKey internal constructor(
         }
 
         fun fromSlice(bytes: ByteArray): ExpandedSecretKey = fromBytes(bytes)
+
+        /** Generate a random [ExpandedSecretKey]. */
+        fun random(): ExpandedSecretKey {
+            val bytes = kotlin.random.Random.nextBytes(EXPANDED_SECRET_KEY_LENGTH)
+            return fromBytes(bytes)
+        }
     }
 
     fun toBytes(): ByteArray {
