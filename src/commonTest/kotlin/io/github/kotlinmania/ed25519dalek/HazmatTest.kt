@@ -1,14 +1,20 @@
+// port-lint: tests hazmat.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Sha512
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HazmatTest {
+    private fun randomExpandedSecretKey(): ExpandedSecretKey {
+        val bytes = Random.nextBytes(64)
+        return ExpandedSecretKey.fromBytes(bytes)
+    }
+
     @Test
-    fun testSignVerifyRaw() {
-        val rawBytes = ByteArray(64) { (it * 7).toByte() }
-        val esk = ExpandedSecretKey.fromBytes(rawBytes)
+    fun signVerifyNonspec() {
+        val esk = randomExpandedSecretKey()
         val vk = VerifyingKey.fromExpandedSecretKey(esk)
 
         val msg = "Then one day, a piano fell on my head".encodeToByteArray()
@@ -18,9 +24,8 @@ class HazmatTest {
     }
 
     @Test
-    fun testSignVerifyPrehashedRaw() {
-        val rawBytes = ByteArray(64) { (it * 13).toByte() }
-        val esk = ExpandedSecretKey.fromBytes(rawBytes)
+    fun signVerifyPrehashedNonspec() {
+        val esk = randomExpandedSecretKey()
         val vk = VerifyingKey.fromExpandedSecretKey(esk)
 
         val msg = "And then I got trampled by a herd of buffalo".encodeToByteArray()
@@ -35,9 +40,8 @@ class HazmatTest {
     }
 
     @Test
-    fun testSignByUpdate() {
-        val rawBytes = ByteArray(64) { (it * 19).toByte() }
-        val esk = ExpandedSecretKey.fromBytes(rawBytes)
+    fun signByupdate() {
+        val esk = randomExpandedSecretKey()
         val vk = VerifyingKey.fromExpandedSecretKey(esk)
 
         val msg = "realistic".encodeToByteArray()

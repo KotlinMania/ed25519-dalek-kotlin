@@ -1,3 +1,4 @@
+// port-lint: tests tests/x25519.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Sha512
@@ -20,7 +21,7 @@ class X25519Test {
         bytes.joinToString("") { (it.toInt() and 0xFF).toString(16).padStart(2, '0') }
 
     @Test
-    fun testEd25519ToX25519KeyConversion() {
+    fun ed25519ToX25519Dh() {
         val edSecretKeyA = hexToBytes("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60")
         val edSecretKeyB = hexToBytes("4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb")
 

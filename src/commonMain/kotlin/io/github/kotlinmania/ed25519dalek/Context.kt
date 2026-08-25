@@ -38,4 +38,28 @@ class Context<K> internal constructor(
 
     /** Borrow the context string value. */
     fun value(): ByteArray = value.copyOf()
+
+    /** Sign a prehashed digest using this signing context. */
+    fun signDigest(prehashedMessage: ByteArray): Signature {
+        val k = key
+        if (k is SigningKey) {
+            return k.signPrehashed(prehashedMessage, value)
+        }
+        throw UnsupportedOperationException("Key is not a SigningKey")
+    }
+
+    /** Verify a prehashed digest using this verifying context. */
+    fun verifyDigest(prehashedMessage: ByteArray, signature: Signature): Boolean {
+        val k = key
+        if (k is VerifyingKey) {
+            return try {
+                k.verifyPrehashed(prehashedMessage, value, signature)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
+        throw UnsupportedOperationException("Key is not a VerifyingKey")
+    }
 }
+
