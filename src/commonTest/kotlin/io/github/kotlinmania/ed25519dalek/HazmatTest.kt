@@ -1,4 +1,4 @@
-// port-lint: tests ed25519-dalek/src/hazmat.rs
+// port-lint: tests hazmat.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Sha512

@@ -1,4 +1,4 @@
-// port-lint: source ed25519-dalek/src/constants.rs
+// port-lint: source constants.rs
 package io.github.kotlinmania.ed25519dalek
 
 /**

@@ -1,4 +1,4 @@
-// port-lint: source ed25519-dalek/src/signing.rs
+// port-lint: source signing.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
