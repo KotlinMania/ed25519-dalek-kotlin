@@ -47,14 +47,14 @@ class VerifyingKey internal constructor(
             val marker = byteArrayOf(0x06, 0x03, 0x2b, 0x65, 0x70, 0x03, 0x21, 0x00)
             var idx = -1
             for (i in 0..(der.size - marker.size - 32)) {
-                var match = true
+                var matches = true
                 for (j in marker.indices) {
                     if (der[i + j] != marker[j]) {
-                        match = false
+                        matches = false
                         break
                     }
                 }
-                if (match) {
+                if (matches) {
                     idx = i + marker.size
                     break
                 }

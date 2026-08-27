@@ -8,9 +8,9 @@ Based on AST analysis, here are the concrete next steps.
 - **Function parity:** 55/103 matched (target 112) — 53.4%
 - **Class/type parity:** 10/22 matched (target 24) — 45.5%
 - **Combined symbol parity:** 65/125 matched (target 136) — 52.0%
-- **Average inline-code cosine:** 0.23 (function body across 10 matched files)
+- **Average inline-code cosine:** 0.29 (function body across 10 matched files)
 - **Average documentation cosine:** 0.62 (doc text across 10 matched files)
-- **Cheat-zeroed Files:** 4
+- **Cheat-zeroed Files:** 2
 - **Critical Issues:** 9 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
@@ -63,10 +63,10 @@ Every matched file is listed below with function and type symbol parity.
 
 ### 4. signing
 
-- **Target:** `ed25519dalek.Signing [ZERO]`
-- **Similarity:** 0.00
+- **Target:** `ed25519dalek.Signing`
+- **Similarity:** 0.26
 - **Dependents:** 0
-- **Priority Score:** 214010.0
+- **Priority Score:** 214007.4
 - **Functions:** 17/34 matched (target 23)
 - **Missing functions:** `as_ref`, `fmt`, `try_sign`, `try_sign_digest`, `from`, `try_from`, `ct_eq`, `eq`, `drop`, `serialize`, `deserialize`, `expecting`, `visit_bytes`, `visit_seq`, `raw_sign`, `raw_sign_byupdate`, `raw_sign_prehashed`
 - **Types:** 2/6 matched (target 3)
@@ -74,10 +74,10 @@ Every matched file is listed below with function and type symbol parity.
 
 ### 5. verifying
 
-- **Target:** `ed25519dalek.Verifying [ZERO]`
-- **Similarity:** 0.00
+- **Target:** `ed25519dalek.Verifying`
+- **Similarity:** 0.31
 - **Dependents:** 0
-- **Priority Score:** 173710.0
+- **Priority Score:** 173706.9
 - **Functions:** 18/32 matched (target 25)
 - **Missing functions:** `fmt`, `as_ref`, `hash`, `eq`, `from`, `raw_verify`, `raw_verify_prehashed`, `verify_digest`, `try_from`, `serialize`, `deserialize`, `expecting`, `visit_bytes`, `visit_seq`
 - **Types:** 2/5 matched (target 2)

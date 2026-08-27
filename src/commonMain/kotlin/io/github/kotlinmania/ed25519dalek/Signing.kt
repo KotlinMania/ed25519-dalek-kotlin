@@ -68,14 +68,14 @@ class SigningKey internal constructor(
             val marker = byteArrayOf(0x06, 0x03, 0x2b, 0x65, 0x70, 0x04, 0x22, 0x04, 0x20)
             var idx = -1
             for (i in 0..(der.size - marker.size - 32)) {
-                var match = true
+                var matches = true
                 for (j in marker.indices) {
                     if (der[i + j] != marker[j]) {
-                        match = false
+                        matches = false
                         break
                     }
                 }
-                if (match) {
+                if (matches) {
                     idx = i + marker.size
                     break
                 }
@@ -88,14 +88,14 @@ class SigningKey internal constructor(
 
             val pkMarker = byteArrayOf(0x81.toByte(), 0x21, 0x00)
             for (i in (idx + 32)..(der.size - pkMarker.size - 32)) {
-                var match = true
+                var matches = true
                 for (j in pkMarker.indices) {
                     if (der[i + j] != pkMarker[j]) {
-                        match = false
+                        matches = false
                         break
                     }
                 }
-                if (match) {
+                if (matches) {
                     val pub = der.copyOfRange(i + pkMarker.size, i + pkMarker.size + 32)
                     if (!signingKey.verifyingKey().asBytes().contentEquals(pub)) {
                         throw SignatureError.from(InternalError.Verify)
