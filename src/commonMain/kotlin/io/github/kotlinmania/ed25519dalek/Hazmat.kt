@@ -1,4 +1,4 @@
-// port-lint: source hazmat.rs
+// port-lint: source ed25519-dalek/src/hazmat.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.EdwardsPoint
