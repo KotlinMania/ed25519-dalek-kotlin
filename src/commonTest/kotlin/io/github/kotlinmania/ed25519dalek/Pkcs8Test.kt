@@ -19,17 +19,20 @@ class Pkcs8Test {
             return result
         }
 
-        val PKCS8_V1_DER: ByteArray = hexToBytes(
-            "302e020100300506032b657004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
-        )
+        val PKCS8_V1_DER: ByteArray =
+            hexToBytes(
+                "302e020100300506032b657004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
+            )
 
-        val PKCS8_V2_DER: ByteArray = hexToBytes(
-            "3072020101300506032b657004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842a01f301d060a2a864886f70d01090914310f0c0d437572646c652043686169727381210019bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
-        )
+        val PKCS8_V2_DER: ByteArray =
+            hexToBytes(
+                "3072020101300506032b657004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842a01f301d060a2a864886f70d01090914310f0c0d437572646c652043686169727381210019bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
+            )
 
-        val PUBLIC_KEY_DER: ByteArray = hexToBytes(
-            "302a300506032b657003210019bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
-        )
+        val PUBLIC_KEY_DER: ByteArray =
+            hexToBytes(
+                "302a300506032b657003210019bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
+            )
 
         val SK_BYTES: ByteArray = hexToBytes("D4EE72DBF913584AD5B6D8F1F769F8AD3AFE7C28CBF1D4FBE097A88F44755842")
         val PK_BYTES: ByteArray = hexToBytes("19BF44096984CDFE8541BAC167DC3B96C85086AA30B6B6CB0C5C38AD703166E1")

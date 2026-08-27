@@ -26,19 +26,21 @@ data class TestVector(
 
 class ValidationCriteriaTest {
     companion object {
-        val VERIFY_ALLOWED_EDGECASES: Set<Flag> = setOf(
-            Flag.LowOrderA,
-            Flag.LowOrderR,
-            Flag.NonCanonicalA,
-            Flag.LowOrderComponentA,
-            Flag.LowOrderComponentR,
-            Flag.ReencodedK,
-        )
+        val VERIFY_ALLOWED_EDGECASES: Set<Flag> =
+            setOf(
+                Flag.LowOrderA,
+                Flag.LowOrderR,
+                Flag.NonCanonicalA,
+                Flag.LowOrderComponentA,
+                Flag.LowOrderComponentR,
+                Flag.ReencodedK,
+            )
 
-        val VERIFY_STRICT_ALLOWED_EDGECASES: Set<Flag> = setOf(
-            Flag.LowOrderComponentA,
-            Flag.LowOrderComponentR,
-        )
+        val VERIFY_STRICT_ALLOWED_EDGECASES: Set<Flag> =
+            setOf(
+                Flag.LowOrderComponentA,
+                Flag.LowOrderComponentR,
+            )
     }
 
     private fun getTestVectors(): List<TestVector> = emptyList()
@@ -46,12 +48,13 @@ class ValidationCriteriaTest {
     @Test
     fun checkValidationCriteria() {
         for (tv in getTestVectors()) {
-            val success = try {
-                tv.pubkey.verify(tv.msg, tv.sig)
-                true
-            } catch (_: Exception) {
-                false
-            }
+            val success =
+                try {
+                    tv.pubkey.verify(tv.msg, tv.sig)
+                    true
+                } catch (_: Exception) {
+                    false
+                }
             if (VERIFY_ALLOWED_EDGECASES.containsAll(tv.flags)) {
                 assertTrue(success, "verify() expected success in testcase #${tv.number}")
             }
@@ -64,12 +67,13 @@ class ValidationCriteriaTest {
         val verifyStrictAllowedEdgecases = mutableSetOf<Flag>()
 
         for (tv in getTestVectors()) {
-            val success = try {
-                tv.pubkey.verify(tv.msg, tv.sig)
-                true
-            } catch (_: Exception) {
-                false
-            }
+            val success =
+                try {
+                    tv.pubkey.verify(tv.msg, tv.sig)
+                    true
+                } catch (_: Exception) {
+                    false
+                }
             if (success) {
                 verifyAllowedEdgecases.addAll(tv.flags)
             }

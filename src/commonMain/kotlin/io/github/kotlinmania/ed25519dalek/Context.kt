@@ -62,4 +62,3 @@ class Context<K> internal constructor(
         throw UnsupportedOperationException("Key is not a VerifyingKey")
     }
 }
-
