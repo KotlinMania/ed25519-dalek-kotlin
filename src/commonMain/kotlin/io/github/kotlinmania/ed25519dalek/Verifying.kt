@@ -69,9 +69,21 @@ class VerifyingKey internal constructor(
 
     /** Convert this public key to SPKI public key DER bytes. */
     fun toPublicKeyDer(): ByteArray {
-        val prefix = byteArrayOf(
-            0x30, 0x2a, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x03, 0x21, 0x00,
-        )
+        val prefix =
+            byteArrayOf(
+                0x30,
+                0x2a,
+                0x30,
+                0x05,
+                0x06,
+                0x03,
+                0x2b,
+                0x65,
+                0x70,
+                0x03,
+                0x21,
+                0x00,
+            )
         return prefix + asBytes()
     }
 
