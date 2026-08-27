@@ -1,4 +1,4 @@
-// port-lint: source ed25519-dalek/src/signature.rs
+// port-lint: source signature.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.CompressedEdwardsY

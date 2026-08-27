@@ -4,12 +4,12 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 10/15 (66.7%)
-- **Function parity:** 55/149 matched (target 112) — 36.9%
-- **Class/type parity:** 10/26 matched (target 24) — 38.5%
-- **Combined symbol parity:** 65/175 matched (target 136) — 37.1%
-- **Average inline-code cosine:** 0.32 (function body across 9 matched files)
-- **Average documentation cosine:** 0.66 (doc text across 9 matched files)
+- **Files Present:** 10/10 (100.0%)
+- **Function parity:** 55/103 matched (target 112) — 53.4%
+- **Class/type parity:** 10/22 matched (target 24) — 45.5%
+- **Combined symbol parity:** 65/125 matched (target 136) — 52.0%
+- **Average inline-code cosine:** 0.29 (function body across 10 matched files)
+- **Average documentation cosine:** 0.62 (doc text across 10 matched files)
 - **Cheat-zeroed Files:** 2
 - **Critical Issues:** 9 files with <0.60 function similarity
 
@@ -27,7 +27,7 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
-### 1. ed25519-dalek.context
+### 1. context
 
 - **Target:** `ed25519dalek.Context`
 - **Similarity:** 0.83
@@ -39,18 +39,18 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** _none_
 - **Tests:** 1/1 matched
 
-### 2. ed25519-dalek.signature
+### 2. signature
 
 - **Target:** `ed25519dalek.Signature`
 - **Similarity:** 0.21
-- **Dependents:** 2
-- **Priority Score:** 2050807.9
+- **Dependents:** 1
+- **Priority Score:** 1050807.9
 - **Functions:** 2/6 matched (target 17)
 - **Missing functions:** `clone`, `fmt`, `try_from`, `from`
 - **Types:** 1/2 matched
 - **Missing types:** `Error`
 
-### 3. ed25519-dalek.constants
+### 3. constants
 
 - **Target:** `ed25519dalek.Constants [ZERO]`
 - **Similarity:** 0.00
@@ -61,7 +61,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 0/0 matched (target 1)
 - **Missing types:** _none_
 
-### 4. ed25519-dalek.signing
+### 4. signing
 
 - **Target:** `ed25519dalek.Signing`
 - **Similarity:** 0.26
@@ -72,7 +72,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/6 matched (target 3)
 - **Missing types:** `VerifyingKey`, `Error`, `SigningKeyVisitor`, `Value`
 
-### 5. ed25519-dalek.verifying
+### 5. verifying
 
 - **Target:** `ed25519dalek.Verifying`
 - **Similarity:** 0.31
@@ -83,7 +83,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/5 matched (target 2)
 - **Missing types:** `Error`, `VerifyingKeyVisitor`, `Value`
 
-### 6. ed25519-dalek.hazmat
+### 6. hazmat
 
 - **Target:** `ed25519dalek.Hazmat`
 - **Similarity:** 0.52
@@ -95,7 +95,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** `Error`, `CtxDigest`, `MsgDigest`
 - **Tests:** 3/4 matched
 
-### 7. ed25519-dalek.batch
+### 7. batch
 
 - **Target:** `ed25519dalek.Batch`
 - **Similarity:** 0.11
@@ -106,7 +106,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 0/1 matched (target 0)
 - **Missing types:** `ZeroRng`
 
-### 8. ed25519-dalek.errors
+### 8. errors
 
 - **Target:** `ed25519dalek.Errors`
 - **Similarity:** 0.15
@@ -128,9 +128,9 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 1/1 matched
 - **Missing types:** _none_
 
-### 10. ed25519-dalek.lib
+### 10. lib
 
-- **Target:** `ed25519dalek.Mod [STUB]`
+- **Target:** `ed25519dalek.Mod [ZERO]`
 - **Similarity:** 0.00
 - **Dependents:** 0
 - **Priority Score:** 10.0
