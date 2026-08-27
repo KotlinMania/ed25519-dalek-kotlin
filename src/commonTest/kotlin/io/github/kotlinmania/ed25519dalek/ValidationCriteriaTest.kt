@@ -1,4 +1,4 @@
-// port-lint: tests tests/validation_criteria.rs
+// port-lint: tests ed25519-dalek/tests/validation_criteria.rs
 package io.github.kotlinmania.ed25519dalek
 
 import kotlin.test.Test

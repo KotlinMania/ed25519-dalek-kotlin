@@ -1,4 +1,4 @@
-// port-lint: tests tests/ed25519.rs
+// port-lint: tests ed25519-dalek/tests/ed25519.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.CompressedEdwardsY
