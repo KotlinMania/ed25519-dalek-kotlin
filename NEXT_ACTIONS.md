@@ -5,12 +5,12 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 10/10 (100.0%)
-- **Function parity:** 55/103 matched (target 112) — 53.4%
-- **Class/type parity:** 10/22 matched (target 24) — 45.5%
-- **Combined symbol parity:** 65/125 matched (target 136) — 52.0%
+- **Function parity:** 55/103 matched (target 110) — 53.4%
+- **Class/type parity:** 10/22 matched (target 22) — 45.5%
+- **Combined symbol parity:** 65/125 matched (target 132) — 52.0%
 - **Average inline-code cosine:** 0.29 (function body across 10 matched files)
 - **Average documentation cosine:** 0.62 (doc text across 10 matched files)
-- **Cheat-zeroed Files:** 2
+- **Cheat-zeroed Files:** 0
 - **Critical Issues:** 9 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
@@ -50,18 +50,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 1/2 matched
 - **Missing types:** `Error`
 
-### 3. constants
-
-- **Target:** `ed25519dalek.Constants [ZERO]`
-- **Similarity:** 0.00
-- **Dependents:** 1
-- **Priority Score:** 1000010.0
-- **Functions:** 0/0 matched (target 1)
-- **Missing functions:** _none_
-- **Types:** 0/0 matched (target 1)
-- **Missing types:** _none_
-
-### 4. signing
+### 3. signing
 
 - **Target:** `ed25519dalek.Signing`
 - **Similarity:** 0.26
@@ -72,7 +61,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/6 matched (target 3)
 - **Missing types:** `VerifyingKey`, `Error`, `SigningKeyVisitor`, `Value`
 
-### 5. verifying
+### 4. verifying
 
 - **Target:** `ed25519dalek.Verifying`
 - **Similarity:** 0.31
@@ -83,7 +72,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/5 matched (target 2)
 - **Missing types:** `Error`, `VerifyingKeyVisitor`, `Value`
 
-### 6. hazmat
+### 5. hazmat
 
 - **Target:** `ed25519dalek.Hazmat`
 - **Similarity:** 0.52
@@ -95,7 +84,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** `Error`, `CtxDigest`, `MsgDigest`
 - **Tests:** 3/4 matched
 
-### 7. batch
+### 6. batch
 
 - **Target:** `ed25519dalek.Batch`
 - **Similarity:** 0.11
@@ -106,7 +95,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 0/1 matched (target 0)
 - **Missing types:** `ZeroRng`
 
-### 8. errors
+### 7. errors
 
 - **Target:** `ed25519dalek.Errors`
 - **Similarity:** 0.15
@@ -117,7 +106,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/2 matched (target 10)
 - **Missing types:** _none_
 
-### 9. verifying.stream
+### 8. verifying.stream
 
 - **Target:** `verifying.StreamVerifier`
 - **Similarity:** 0.52
@@ -128,17 +117,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 1/1 matched
 - **Missing types:** _none_
 
-### 10. lib
-
-- **Target:** `ed25519dalek.Mod [ZERO]`
-- **Similarity:** 0.00
-- **Dependents:** 0
-- **Priority Score:** 10.0
-- **Functions:** 0/0 matched (target 1)
-- **Missing functions:** _none_
-- **Types:** 0/0 matched (target 1)
-- **Missing types:** _none_
-
 ## Success Criteria
 
 For each file to be considered "complete":
@@ -147,4 +125,18 @@ For each file to be considered "complete":
 - All tests ported
 - Documentation ported
 - port-lint header present
+
+## Reexport / Wiring Modules
+
+These files match `reexport_modules` patterns in `.ast_distance_config.json`. They are filtered out of
+normal priority and missing-file ladders because they are wiring
+modules, not direct logic ports. Consult them for call-site routing;
+do not treat them as the next implementation target by default.
+
+### Matched
+
+| Source | Target | Path |
+|--------|--------|------|
+| `constants` | `ed25519dalek.Constants` | `constants` |
+| `lib` | `ed25519dalek.Mod` | `lib` |
 
