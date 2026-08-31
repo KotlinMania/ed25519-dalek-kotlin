@@ -1,4 +1,4 @@
-// port-lint: source errors.rs
+// port-lint: source ed25519-dalek/src/errors.rs
 package io.github.kotlinmania.ed25519dalek
 
 /**

@@ -1,4 +1,4 @@
-// port-lint: tests errors.rs
+// port-lint: tests ed25519-dalek/src/errors.rs
 package io.github.kotlinmania.ed25519dalek
 
 import kotlin.test.Test
