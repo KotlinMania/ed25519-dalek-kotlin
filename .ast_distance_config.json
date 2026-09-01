@@ -17,6 +17,10 @@
   },
   "reexport_modules": [
     "lib",
-    "constants"
+    "lib.rs",
+    "ed25519-dalek/src/lib.rs",
+    "constants",
+    "constants.rs",
+    "ed25519-dalek/src/constants.rs"
   ]
 }
