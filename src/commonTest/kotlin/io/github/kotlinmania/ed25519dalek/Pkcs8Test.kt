@@ -1,4 +1,4 @@
-// port-lint: tests ed25519-dalek/tests/pkcs8.rs
+// port-lint: tests ../tests/pkcs8.rs
 package io.github.kotlinmania.ed25519dalek
 
 import kotlin.test.Test

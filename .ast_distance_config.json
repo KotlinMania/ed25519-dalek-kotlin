@@ -2,7 +2,7 @@
   "type": "port",
   "name": "ed25519-dalek-kotlin",
   "source": {
-    "path": "tmp",
+    "path": "tmp/ed25519-dalek/src",
     "lang": "rust"
   },
   "target": {
