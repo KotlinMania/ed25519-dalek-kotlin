@@ -1,4 +1,4 @@
-// port-lint: tests ed25519-dalek/tests/x25519.rs
+// port-lint: tests ../tests/x25519.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Sha512

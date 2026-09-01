@@ -1,4 +1,4 @@
-// port-lint: source ed25519-dalek/src/verifying/stream.rs
+// port-lint: source verifying/stream.rs
 package io.github.kotlinmania.ed25519dalek.verifying
 
 import io.github.kotlinmania.ed25519dalek.InternalError

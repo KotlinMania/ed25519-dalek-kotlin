@@ -1,4 +1,4 @@
-// port-lint: source ed25519-dalek/src/context.rs
+// port-lint: source context.rs
 package io.github.kotlinmania.ed25519dalek
 
 /**

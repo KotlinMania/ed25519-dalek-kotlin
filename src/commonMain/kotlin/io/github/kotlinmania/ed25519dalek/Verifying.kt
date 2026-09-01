@@ -1,4 +1,4 @@
-// port-lint: source ed25519-dalek/src/verifying.rs
+// port-lint: source verifying.rs
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.CompressedEdwardsY
