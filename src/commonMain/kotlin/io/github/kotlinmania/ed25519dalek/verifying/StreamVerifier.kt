@@ -32,4 +32,9 @@ class StreamVerifier internal constructor(
             throw SignatureError.from(InternalError.Verify)
         }
     }
+
+    internal companion object {
+        fun new(publicKey: VerifyingKey, signature: InternalSignature): StreamVerifier =
+            StreamVerifier(publicKey, signature)
+    }
 }

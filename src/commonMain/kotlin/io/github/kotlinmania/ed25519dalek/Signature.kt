@@ -30,6 +30,9 @@ class Signature(
             return Signature(bytes.copyOf())
         }
 
+        /** Construct a [Signature] from a slice of 64 bytes. */
+        fun fromSlice(bytes: ByteArray): Signature = fromBytes(bytes)
+
         /** Construct a [Signature] from 32-byte R and 32-byte S components. */
         fun fromComponents(r: ByteArray, s: ByteArray): Signature {
             if (r.size != 32 || s.size != 32) {
