@@ -5,6 +5,7 @@ import io.github.kotlinmania.ed25519dalek.internal.Sha512
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class HazmatTest {
     private fun randomExpandedSecretKey(): ExpandedSecretKey {
@@ -65,5 +66,21 @@ class HazmatTest {
                 vk,
             )
         assertEquals(goodSig, sig2)
+
+        assertFailsWith<SignatureError> {
+            rawSignByUpdate(
+                esk,
+                { _ -> throw SignatureError.from(InternalError.Verify) },
+                vk,
+            )
+        }
+    }
+
+    @Test
+    fun expandedSecretKeyFromSlice() {
+        val bytes = Random.nextBytes(64)
+        val esk1 = ExpandedSecretKey.fromBytes(bytes)
+        val esk2 = ExpandedSecretKey.fromSlice(bytes)
+        assertEquals(esk1, esk2)
     }
 }
