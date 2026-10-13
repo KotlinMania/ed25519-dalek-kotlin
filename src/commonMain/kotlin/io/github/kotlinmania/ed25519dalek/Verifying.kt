@@ -5,8 +5,8 @@ import io.github.kotlinmania.ed25519dalek.internal.CompressedEdwardsY
 import io.github.kotlinmania.ed25519dalek.internal.EdwardsPoint
 import io.github.kotlinmania.ed25519dalek.internal.MontgomeryPoint
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
-import io.github.kotlinmania.ed25519dalek.internal.Sha512
 import io.github.kotlinmania.ed25519dalek.verifying.StreamVerifier
+import io.github.kotlinmania.sha2.Sha512
 
 /**
  * An ed25519 public key.

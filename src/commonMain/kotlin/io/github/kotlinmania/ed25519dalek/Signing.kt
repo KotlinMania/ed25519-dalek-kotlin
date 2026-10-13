@@ -2,8 +2,8 @@
 package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
-import io.github.kotlinmania.ed25519dalek.internal.Sha512
 import io.github.kotlinmania.ed25519dalek.verifying.StreamVerifier
+import io.github.kotlinmania.sha2.Sha512
 import kotlin.random.Random
 
 /** Type alias for secret key bytes matching upstream `SecretKey`. */
