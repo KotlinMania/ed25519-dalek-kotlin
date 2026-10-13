@@ -1,5 +1,9 @@
 package io.github.kotlinmania.ed25519dalek.internal
 
+import io.github.kotlinmania.zeroize.Zeroize
+import io.github.kotlinmania.zeroize.ZeroizeOnDrop
+import io.github.kotlinmania.zeroize.zeroize
+
 /**
  * An element of the scalar field GF(l) where
  * l = 2^252 + 27742317777372353535851937790883648493
@@ -8,9 +12,14 @@ package io.github.kotlinmania.ed25519dalek.internal
 internal class Scalar private constructor(
     // 8 32-bit words, little-endian, canonical representation in [0, l)
     internal val w: IntArray,
-) {
+) : Zeroize,
+    ZeroizeOnDrop {
     init {
         require(w.size == 8)
+    }
+
+    override fun zeroize() {
+        w.zeroize()
     }
 
     companion object {

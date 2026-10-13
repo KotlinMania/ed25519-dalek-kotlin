@@ -4,6 +4,9 @@ package io.github.kotlinmania.ed25519dalek
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
 import io.github.kotlinmania.ed25519dalek.verifying.StreamVerifier
 import io.github.kotlinmania.sha2.Sha512
+import io.github.kotlinmania.zeroize.Zeroize
+import io.github.kotlinmania.zeroize.ZeroizeOnDrop
+import io.github.kotlinmania.zeroize.zeroize
 import kotlin.random.Random
 
 /** Type alias for secret key bytes matching upstream `SecretKey`. */
@@ -23,9 +26,19 @@ data class AlgorithmIdentifier(
 class SigningKey internal constructor(
     internal val secretKey: ByteArray,
     internal val verifyingKey: VerifyingKey,
-) {
+) : Zeroize,
+    ZeroizeOnDrop,
+    AutoCloseable {
     init {
         require(secretKey.size == SECRET_KEY_LENGTH)
+    }
+
+    override fun zeroize() {
+        secretKey.zeroize()
+    }
+
+    override fun close() {
+        zeroize()
     }
 
     companion object {

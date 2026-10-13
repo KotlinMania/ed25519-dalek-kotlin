@@ -11,6 +11,7 @@ ktlintEngine = "1.8.0"
 kotlinxBenchmark = "0.5.0"
 sha2 = "0.1.0"
 digest = "0.1.0"
+zeroize = "0.1.0"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -31,6 +32,7 @@ collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-im
 kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-runtime", version.ref = "kotlinxBenchmark" }
 sha2 = { module = "io.github.kotlinmania:sha2-kotlin", version.ref = "sha2" }
 digest = { module = "io.github.kotlinmania:digest-kotlin", version.ref = "digest" }
+zeroize = { module = "io.github.kotlinmania:zeroize-kotlin", version.ref = "zeroize" }
 
 [bundles]
 ed25519-dalek-commonMain = [
@@ -41,4 +43,5 @@ ed25519-dalek-commonMain = [
   "collections-immutable",
   "sha2",
   "digest",
+  "zeroize",
 ]
