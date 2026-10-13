@@ -8,3 +8,6 @@ package io.github.kotlinmania.ed25519dalek
  * verification, batch verification, and hazards/low-level cryptography.
  */
 public const val ED25519_KEY_ALGORITHM: String = "Ed25519"
+
+public typealias Sha512 = io.github.kotlinmania.sha2.Sha512
+public typealias Digest = io.github.kotlinmania.digest.Digest

@@ -1,7 +1,7 @@
 // port-lint: tests ../tests/ed25519.rs
 package io.github.kotlinmania.ed25519dalek
 
-import io.github.kotlinmania.ed25519dalek.internal.Sha512
+import io.github.kotlinmania.sha2.Sha512
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
