@@ -130,7 +130,7 @@ internal class Scalar private constructor(
         private fun reduce512(w: IntArray): Scalar {
             // Barrett-like reduction or shift-and-subtract / division
             // Since 512-bit division is fast with BigInteger / binary division:
-            var rem = w.copyOf() // 16 words
+            val rem = w.copyOf() // 16 words
             // In little-endian, bit length is at most 512
             for (bit in 511 downTo 252) {
                 val wordIdx = bit / 32

@@ -13,6 +13,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class Ed25519Test {
     companion object {
@@ -305,7 +306,7 @@ class Ed25519Test {
         var s = nonNullScalar()
         var r = pickR(s)
 
-        for (attempt in 0 until 1000) {
+        repeat(1000) {
             val k1 = computeChallenge(message1, pubkey, r, null)
             val k2 = computeChallenge(message2, pubkey, r, null)
             val cond1 = pubkey.negate().add(pubkey.mul(k1)).isIdentity()
@@ -322,6 +323,7 @@ class Ed25519Test {
             s = nonNullScalar()
             r = pickR(s)
         }
+        fail("Failed to find repudiation challenge within 1000 attempts")
     }
 
     @Test
@@ -342,7 +344,7 @@ class Ed25519Test {
         var s = nonNullScalar()
         var r = pickR(s)
 
-        for (attempt in 0 until 1000) {
+        repeat(1000) {
             val k1 = computeChallenge(message1Bytes, pubkey, r, contextStr)
             val k2 = computeChallenge(message2Bytes, pubkey, r, contextStr)
             val cond1 = pubkey.negate().add(pubkey.mul(k1)).isIdentity()
@@ -359,6 +361,7 @@ class Ed25519Test {
             s = nonNullScalar()
             r = pickR(s)
         }
+        fail("Failed to find repudiation prehash challenge within 1000 attempts")
     }
 
     @Test
