@@ -77,6 +77,18 @@ class ValidationCriteriaTest {
             if (success) {
                 verifyAllowedEdgecases.addAll(tv.flags)
             }
+            val strictSuccess =
+                try {
+                    tv.pubkey.verifyStrict(tv.msg, tv.sig)
+                    true
+                } catch (_: Exception) {
+                    false
+                }
+            if (strictSuccess) {
+                verifyStrictAllowedEdgecases.addAll(tv.flags)
+            }
         }
+        assertTrue(verifyAllowedEdgecases.isEmpty())
+        assertTrue(verifyStrictAllowedEdgecases.isEmpty())
     }
 }
