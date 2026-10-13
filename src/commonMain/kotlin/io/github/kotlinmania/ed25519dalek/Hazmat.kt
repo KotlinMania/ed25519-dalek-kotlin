@@ -4,6 +4,9 @@ package io.github.kotlinmania.ed25519dalek
 import io.github.kotlinmania.ed25519dalek.internal.EdwardsPoint
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
 import io.github.kotlinmania.sha2.Sha512
+import io.github.kotlinmania.zeroize.Zeroize
+import io.github.kotlinmania.zeroize.ZeroizeOnDrop
+import io.github.kotlinmania.zeroize.zeroize
 
 /**
  * Low-level interfaces to ed25519 functions.
@@ -19,9 +22,20 @@ import io.github.kotlinmania.sha2.Sha512
 class ExpandedSecretKey internal constructor(
     internal val scalar: Scalar,
     val hashPrefix: ByteArray,
-) {
+) : Zeroize,
+    ZeroizeOnDrop,
+    AutoCloseable {
     init {
         require(hashPrefix.size == 32) { "hashPrefix must be 32 bytes" }
+    }
+
+    override fun zeroize() {
+        scalar.zeroize()
+        hashPrefix.zeroize()
+    }
+
+    override fun close() {
+        zeroize()
     }
 
     /** View the 32-byte secret scalar. */
