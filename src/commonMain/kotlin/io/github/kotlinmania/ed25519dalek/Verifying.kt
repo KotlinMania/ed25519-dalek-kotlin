@@ -122,9 +122,9 @@ class VerifyingKey internal constructor(
     fun isWeak(): Boolean = point.isSmallOrder()
 
     /**
-     * Verify a signature on a message with this public key.
+     * The ordinary non-batched Ed25519 verification check, rejecting non-canonical R values.
      */
-    fun verify(message: ByteArray, signature: Signature) {
+    fun rawVerify(message: ByteArray, signature: Signature) {
         val internalSig = signature.toInternal()
         val expectedR = RCompute.compute(this, internalSig, null, message)
         if (expectedR != internalSig.R) {
@@ -133,11 +133,11 @@ class VerifyingKey internal constructor(
     }
 
     /**
-     * Verify a signature on a prehashed message with an optional context string.
+     * The prehashed non-batched Ed25519 verification check, rejecting non-canonical R values.
      */
-    fun verifyPrehashed(
+    fun rawVerifyPrehashed(
         prehashedMessage: ByteArray,
-        context: ByteArray?,
+        context: ByteArray? = null,
         signature: Signature,
     ) {
         val internalSig = signature.toInternal()
@@ -149,6 +149,31 @@ class VerifyingKey internal constructor(
         if (expectedR != internalSig.R) {
             throw SignatureError.from(InternalError.Verify)
         }
+    }
+
+    /**
+     * Verify a signature on a message with this public key.
+     */
+    fun verify(message: ByteArray, signature: Signature) {
+        rawVerify(message, signature)
+    }
+
+    /**
+     * Verify a signature on a prehashed message with an optional context string.
+     */
+    fun verifyPrehashed(
+        prehashedMessage: ByteArray,
+        context: ByteArray? = null,
+        signature: Signature,
+    ) {
+        rawVerifyPrehashed(prehashedMessage, context, signature)
+    }
+
+    /**
+     * Equivalent to [verifyPrehashed] with context set to null.
+     */
+    fun verifyDigest(prehashedMessage: ByteArray, signature: Signature) {
+        verifyPrehashed(prehashedMessage, null, signature)
     }
 
     /**

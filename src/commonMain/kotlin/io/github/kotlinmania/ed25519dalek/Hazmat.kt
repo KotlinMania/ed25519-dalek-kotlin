@@ -79,7 +79,7 @@ class ExpandedSecretKey internal constructor(
         return out
     }
 
-    internal fun rawSign(message: ByteArray, verifyingKey: VerifyingKey): Signature {
+    fun rawSign(message: ByteArray, verifyingKey: VerifyingKey): Signature {
         val hasherR = Sha512()
         hasherR.update(hashPrefix)
         hasherR.update(message)
@@ -100,10 +100,10 @@ class ExpandedSecretKey internal constructor(
         return Signature.fromComponents(R.asBytes(), s.toByteArray())
     }
 
-    internal fun rawSignPrehashed(
+    fun rawSignPrehashed(
         prehashedMessage: ByteArray,
         verifyingKey: VerifyingKey,
-        context: ByteArray?,
+        context: ByteArray? = null,
     ): Signature {
         val ctx = context ?: ByteArray(0)
         if (ctx.size > Context.MAX_LENGTH) {
@@ -135,7 +135,12 @@ class ExpandedSecretKey internal constructor(
         return Signature.fromComponents(R.asBytes(), s.toByteArray())
     }
 
-    internal fun rawSignByUpdate(
+    fun rawSignByupdate(
+        msgUpdate: (Sha512) -> Unit,
+        verifyingKey: VerifyingKey,
+    ): Signature = rawSignByUpdate(msgUpdate, verifyingKey)
+
+    fun rawSignByUpdate(
         msgUpdate: (Sha512) -> Unit,
         verifyingKey: VerifyingKey,
     ): Signature {
@@ -196,7 +201,14 @@ fun rawSignPrehashed(
 ): Signature = esk.rawSignPrehashed(prehashedMessage, verifyingKey, context)
 
 /** Compute an ordinary Ed25519 signature with incremental message chunks. */
-internal fun rawSignByUpdate(
+fun rawSignByupdate(
+    esk: ExpandedSecretKey,
+    msgUpdate: (Sha512) -> Unit,
+    verifyingKey: VerifyingKey,
+): Signature = esk.rawSignByUpdate(msgUpdate, verifyingKey)
+
+/** Alias for [rawSignByupdate]. */
+fun rawSignByUpdate(
     esk: ExpandedSecretKey,
     msgUpdate: (Sha512) -> Unit,
     verifyingKey: VerifyingKey,
@@ -207,7 +219,7 @@ fun rawVerify(
     vk: VerifyingKey,
     message: ByteArray,
     signature: Signature,
-): Unit = vk.verify(message, signature)
+): Unit = vk.rawVerify(message, signature)
 
 /** Prehashed Ed25519 verification check. */
 fun rawVerifyPrehashed(
@@ -215,4 +227,4 @@ fun rawVerifyPrehashed(
     prehashedMessage: ByteArray,
     context: ByteArray? = null,
     signature: Signature,
-): Unit = vk.verifyPrehashed(prehashedMessage, context, signature)
+): Unit = vk.rawVerifyPrehashed(prehashedMessage, context, signature)

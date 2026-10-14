@@ -48,6 +48,9 @@ class Context<K> internal constructor(
         throw UnsupportedOperationException("Key is not a SigningKey")
     }
 
+    /** Sign a prehashed digest using this signing context (matches DigestSigner::try_sign_digest). */
+    fun trySignDigest(prehashedMessage: ByteArray): Signature = signDigest(prehashedMessage)
+
     /** Verify a prehashed digest using this verifying context. */
     fun verifyDigest(prehashedMessage: ByteArray, signature: Signature): Boolean {
         val k = key

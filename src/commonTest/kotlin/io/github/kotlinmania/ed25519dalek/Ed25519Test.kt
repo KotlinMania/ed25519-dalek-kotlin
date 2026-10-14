@@ -467,4 +467,89 @@ class Ed25519Test {
         val signingKey = SigningKey.fromBytes(SECRET_KEY_BYTES)
         assertEquals(SECRET_KEY_LENGTH, signingKey.toBytes().size)
     }
+
+    @Test
+    fun rawSignAndVerify() {
+        val signingKey = SigningKey.generate()
+        val verifyingKey = signingKey.verifyingKey()
+        val msg = "raw signing and verifying test message".encodeToByteArray()
+
+        val sig1 = signingKey.rawSign(msg)
+        val sig2 = signingKey.trySign(msg)
+        assertEquals(sig1, sig2)
+
+        signingKey.rawVerify(msg, sig1)
+        verifyingKey.rawVerify(msg, sig1)
+        verifyingKey.verify(msg, sig1)
+
+        val badMsg = "different message".encodeToByteArray()
+        assertFailsWith<SignatureError> { signingKey.rawVerify(badMsg, sig1) }
+        assertFailsWith<SignatureError> { verifyingKey.rawVerify(badMsg, sig1) }
+    }
+
+    @Test
+    fun rawSignByupdate() {
+        val signingKey = SigningKey.generate()
+        val verifyingKey = signingKey.verifyingKey()
+        val part1 = "hello ".encodeToByteArray()
+        val part2 = "world".encodeToByteArray()
+        val fullMsg = "hello world".encodeToByteArray()
+
+        val sig1 =
+            signingKey.rawSignByupdate { h ->
+                h.update(part1)
+                h.update(part2)
+            }
+        val sig2 =
+            signingKey.rawSignByUpdate { h ->
+                h.update(part1)
+                h.update(part2)
+            }
+        val expectedSig = signingKey.sign(fullMsg)
+
+        assertEquals(expectedSig, sig1)
+        assertEquals(expectedSig, sig2)
+
+        verifyingKey.rawVerify(fullMsg, sig1)
+        signingKey.rawVerify(fullMsg, sig2)
+
+        val esk =
+            ExpandedSecretKey.fromBytes(
+                Sha512().apply { update(signingKey.toBytes()) }.finalize(),
+            )
+        val sig3 = rawSignByupdate(esk, { h -> h.update(fullMsg) }, verifyingKey)
+        val sig4 = rawSignByUpdate(esk, { h -> h.update(fullMsg) }, verifyingKey)
+        assertEquals(expectedSig, sig3)
+        assertEquals(expectedSig, sig4)
+    }
+
+    @Test
+    fun rawSignAndVerifyPrehashed() {
+        val signingKey = SigningKey.generate()
+        val verifyingKey = signingKey.verifyingKey()
+        val msg = "prehashed message content".encodeToByteArray()
+        val prehash = Sha512().apply { update(msg) }.finalize()
+
+        val sig1 = signingKey.rawSignPrehashed(prehash)
+        val sig2 = signingKey.trySignDigest(prehash)
+        assertEquals(sig1, sig2)
+
+        verifyingKey.rawVerifyPrehashed(prehash, null, sig1)
+        signingKey.rawVerifyPrehashed(prehash, null, sig1)
+        verifyingKey.verifyDigest(prehash, sig1)
+        signingKey.verifyDigest(prehash, sig1)
+
+        val ctx = "test-context".encodeToByteArray()
+        val sigWithCtx = signingKey.rawSignPrehashed(prehash, ctx)
+        verifyingKey.rawVerifyPrehashed(prehash, ctx, sigWithCtx)
+        signingKey.rawVerifyPrehashed(prehash, ctx, sigWithCtx)
+
+        val context = signingKey.withContext(ctx)
+        val sigFromCtx = context.trySignDigest(prehash)
+        assertEquals(sigWithCtx, sigFromCtx)
+
+        val badPrehash = Sha512().apply { update("wrong".encodeToByteArray()) }.finalize()
+        assertFailsWith<SignatureError> { verifyingKey.rawVerifyPrehashed(badPrehash, null, sig1) }
+        assertFailsWith<SignatureError> { verifyingKey.verifyDigest(badPrehash, sig1) }
+    }
 }

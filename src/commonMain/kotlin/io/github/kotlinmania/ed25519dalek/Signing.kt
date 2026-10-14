@@ -208,9 +208,50 @@ class SigningKey internal constructor(
         return esk.rawSignPrehashed(prehashedMessage, verifyingKey, context)
     }
 
+    /** Sign a message with this signing key's secret key. */
+    fun trySign(message: ByteArray): Signature = sign(message)
+
+    /** Equivalent to [signPrehashed] with context set to null. */
+    fun trySignDigest(prehashedMessage: ByteArray): Signature = signPrehashed(prehashedMessage, null)
+
+    /** The plain, non-prehashed, signing function for Ed25519. */
+    fun rawSign(message: ByteArray): Signature = sign(message)
+
+    /** Sign a message provided in parts. */
+    fun rawSignByupdate(msgUpdate: (Sha512) -> Unit): Signature {
+        val esk = expandedSecretKeyFromSecret(secretKey)
+        return esk.rawSignByUpdate(msgUpdate, verifyingKey)
+    }
+
+    /** Alias for [rawSignByupdate]. */
+    fun rawSignByUpdate(msgUpdate: (Sha512) -> Unit): Signature = rawSignByupdate(msgUpdate)
+
+    /** The prehashed signing function for Ed25519 (i.e., Ed25519ph). */
+    fun rawSignPrehashed(prehashedMessage: ByteArray, context: ByteArray? = null): Signature =
+        signPrehashed(prehashedMessage, context)
+
     /** Verify a signature on a message with this key's public key. */
     fun verify(message: ByteArray, signature: Signature) {
         verifyingKey.verify(message, signature)
+    }
+
+    /** Verify a prehashed digest with context set to null using this key's public key. */
+    fun verifyDigest(prehashedMessage: ByteArray, signature: Signature) {
+        verifyingKey.verifyDigest(prehashedMessage, signature)
+    }
+
+    /** Ordinary non-batched Ed25519 verification check with this key's public key. */
+    fun rawVerify(message: ByteArray, signature: Signature) {
+        verifyingKey.rawVerify(message, signature)
+    }
+
+    /** Prehashed Ed25519 verification check with this key's public key. */
+    fun rawVerifyPrehashed(
+        prehashedMessage: ByteArray,
+        context: ByteArray? = null,
+        signature: Signature,
+    ) {
+        verifyingKey.rawVerifyPrehashed(prehashedMessage, context, signature)
     }
 
     /** Verify a signature on a prehashed message. */
