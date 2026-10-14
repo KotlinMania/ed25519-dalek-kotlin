@@ -3,6 +3,16 @@ package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
 import io.github.kotlinmania.ed25519dalek.verifying.StreamVerifier
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.Expected
+import io.github.kotlinmania.serdecore.de.SeqAccess
+import io.github.kotlinmania.serdecore.de.U8Deserialize
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
 import io.github.kotlinmania.sha2.Sha512
 import io.github.kotlinmania.zeroize.Zeroize
 import io.github.kotlinmania.zeroize.ZeroizeOnDrop
@@ -28,7 +38,8 @@ class SigningKey internal constructor(
     internal val verifyingKey: VerifyingKey,
 ) : Zeroize,
     ZeroizeOnDrop,
-    AutoCloseable {
+    AutoCloseable,
+    Serialize {
     init {
         require(secretKey.size == SECRET_KEY_LENGTH)
     }
@@ -41,7 +52,14 @@ class SigningKey internal constructor(
         zeroize()
     }
 
-    companion object {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializer.serializeBytes(secretKey)
+
+    companion object : Deserialize<SigningKey> {
+        override fun <D> deserialize(deserializer: D): SerdeResult<SigningKey>
+            where D : Deserializer =
+            deserializer.deserializeBytes(SigningKeyVisitor)
+
         /** Generate a fresh random [SigningKey]. */
         fun generate(): SigningKey {
             val bytes = Random.nextBytes(SECRET_KEY_LENGTH)
@@ -240,4 +258,42 @@ class SigningKey internal constructor(
     override fun hashCode(): Int = secretKey.contentHashCode()
 
     override fun toString(): String = "SigningKey(verifyingKey=$verifyingKey)"
+}
+
+private object SigningKeyVisitor : Visitor<SigningKey> {
+    override fun expecting(): String = "An ed25519 signing (private) key"
+
+    override fun visitBytes(v: ByteArray): SerdeResult<SigningKey> =
+        try {
+            SerdeResult.success(SigningKey.fromBytes(v))
+        } catch (e: Exception) {
+            SerdeResult.failure(SerdeError.custom(e.message ?: "invalid signing key"))
+        }
+
+    override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<SigningKey> {
+        val bytes = ByteArray(SECRET_KEY_LENGTH)
+        for (i in 0 until SECRET_KEY_LENGTH) {
+            val element =
+                access.nextElement(U8Deserialize).getOrNull()
+                    ?: return SerdeResult.failure(SerdeError.invalidLength(i, Expected { "expected 32 bytes" }))
+            bytes[i] = element.toByte()
+        }
+
+        var remaining = 0
+        while (access.nextElement(U8Deserialize).getOrNull() != null) {
+            remaining++
+        }
+
+        if (remaining > 0) {
+            return SerdeResult.failure(
+                SerdeError.invalidLength(SECRET_KEY_LENGTH + remaining, Expected { "expected 32 bytes" }),
+            )
+        }
+
+        return try {
+            SerdeResult.success(SigningKey.fromBytes(bytes))
+        } catch (e: Exception) {
+            SerdeResult.failure(SerdeError.custom(e.message ?: "invalid signing key"))
+        }
+    }
 }
