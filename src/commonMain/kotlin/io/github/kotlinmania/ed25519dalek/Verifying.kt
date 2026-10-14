@@ -6,6 +6,16 @@ import io.github.kotlinmania.ed25519dalek.internal.EdwardsPoint
 import io.github.kotlinmania.ed25519dalek.internal.MontgomeryPoint
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
 import io.github.kotlinmania.ed25519dalek.verifying.StreamVerifier
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.Expected
+import io.github.kotlinmania.serdecore.de.SeqAccess
+import io.github.kotlinmania.serdecore.de.U8Deserialize
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
 import io.github.kotlinmania.sha2.Sha512
 
 /**
@@ -14,8 +24,15 @@ import io.github.kotlinmania.sha2.Sha512
 class VerifyingKey internal constructor(
     internal val compressed: CompressedEdwardsY,
     internal val point: EdwardsPoint,
-) {
-    companion object {
+) : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializer.serializeBytes(toBytes())
+
+    companion object : Deserialize<VerifyingKey> {
+        override fun <D> deserialize(deserializer: D): SerdeResult<VerifyingKey>
+            where D : Deserializer =
+            deserializer.deserializeBytes(VerifyingKeyVisitor)
+
         /**
          * Construct a [VerifyingKey] from a 32-byte public key representation.
          */
@@ -248,5 +265,43 @@ internal class RCompute(
         val k = Scalar.fromHash(kDigest)
         val minusA = key.point.negate()
         return EdwardsPoint.vartimeDoubleScalarMulBasepoint(k, minusA, signature.s).compress()
+    }
+}
+
+private object VerifyingKeyVisitor : Visitor<VerifyingKey> {
+    override fun expecting(): String = "An ed25519 verifying (public) key"
+
+    override fun visitBytes(v: ByteArray): SerdeResult<VerifyingKey> =
+        try {
+            SerdeResult.success(VerifyingKey.fromBytes(v))
+        } catch (e: Exception) {
+            SerdeResult.failure(SerdeError.custom(e.message ?: "invalid verifying key"))
+        }
+
+    override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<VerifyingKey> {
+        val bytes = ByteArray(PUBLIC_KEY_LENGTH)
+        for (i in 0 until PUBLIC_KEY_LENGTH) {
+            val element =
+                access.nextElement(U8Deserialize).getOrNull()
+                    ?: return SerdeResult.failure(SerdeError.invalidLength(i, Expected { "expected 32 bytes" }))
+            bytes[i] = element.toByte()
+        }
+
+        var remaining = 0
+        while (access.nextElement(U8Deserialize).getOrNull() != null) {
+            remaining++
+        }
+
+        if (remaining > 0) {
+            return SerdeResult.failure(
+                SerdeError.invalidLength(PUBLIC_KEY_LENGTH + remaining, Expected { "expected 32 bytes" }),
+            )
+        }
+
+        return try {
+            SerdeResult.success(VerifyingKey.fromBytes(bytes))
+        } catch (e: Exception) {
+            SerdeResult.failure(SerdeError.custom(e.message ?: "invalid verifying key"))
+        }
     }
 }

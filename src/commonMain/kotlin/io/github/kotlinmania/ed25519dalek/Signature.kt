@@ -3,6 +3,16 @@ package io.github.kotlinmania.ed25519dalek
 
 import io.github.kotlinmania.ed25519dalek.internal.CompressedEdwardsY
 import io.github.kotlinmania.ed25519dalek.internal.Scalar
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.Expected
+import io.github.kotlinmania.serdecore.de.SeqAccess
+import io.github.kotlinmania.serdecore.de.U8Deserialize
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
 
 /**
  * An ed25519 signature.
@@ -12,14 +22,21 @@ import io.github.kotlinmania.ed25519dalek.internal.Scalar
  */
 class Signature(
     private val bytes: ByteArray,
-) {
+) : Serialize {
     init {
         if (bytes.size != SIGNATURE_LENGTH) {
             throw SignatureError.from(InternalError.BytesLength("Signature", SIGNATURE_LENGTH))
         }
     }
 
-    companion object {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializer.serializeBytes(bytes)
+
+    companion object : Deserialize<Signature> {
+        override fun <D> deserialize(deserializer: D): SerdeResult<Signature>
+            where D : Deserializer =
+            deserializer.deserializeBytes(SignatureVisitor)
+
         /** Construct a [Signature] from a slice of 64 bytes. */
         fun fromBytes(bytes: ByteArray): Signature {
             if (bytes.size != SIGNATURE_LENGTH) {
@@ -117,4 +134,42 @@ internal class InternalSignature(
     override fun hashCode(): Int = 31 * R.hashCode() + s.hashCode()
 
     override fun toString(): String = "Signature( R: $R, s: $s )"
+}
+
+private object SignatureVisitor : Visitor<Signature> {
+    override fun expecting(): String = "An ed25519 signature"
+
+    override fun visitBytes(v: ByteArray): SerdeResult<Signature> =
+        try {
+            SerdeResult.success(Signature.fromBytes(v))
+        } catch (e: Exception) {
+            SerdeResult.failure(SerdeError.custom(e.message ?: "invalid signature"))
+        }
+
+    override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<Signature> {
+        val bytes = ByteArray(SIGNATURE_LENGTH)
+        for (i in 0 until SIGNATURE_LENGTH) {
+            val element =
+                access.nextElement(U8Deserialize).getOrNull()
+                    ?: return SerdeResult.failure(SerdeError.invalidLength(i, Expected { "expected 64 bytes" }))
+            bytes[i] = element.toByte()
+        }
+
+        var remaining = 0
+        while (access.nextElement(U8Deserialize).getOrNull() != null) {
+            remaining++
+        }
+
+        if (remaining > 0) {
+            return SerdeResult.failure(
+                SerdeError.invalidLength(SIGNATURE_LENGTH + remaining, Expected { "expected 64 bytes" }),
+            )
+        }
+
+        return try {
+            SerdeResult.success(Signature.fromBytes(bytes))
+        } catch (e: Exception) {
+            SerdeResult.failure(SerdeError.custom(e.message ?: "invalid signature"))
+        }
+    }
 }

@@ -12,6 +12,7 @@ kotlinxBenchmark = "0.5.0"
 sha2 = "0.1.0"
 digest = "0.1.0"
 zeroize = "0.1.0"
+serde = "0.1.10"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -33,6 +34,7 @@ kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-
 sha2 = { module = "io.github.kotlinmania:sha2-kotlin", version.ref = "sha2" }
 digest = { module = "io.github.kotlinmania:digest-kotlin", version.ref = "digest" }
 zeroize = { module = "io.github.kotlinmania:zeroize-kotlin", version.ref = "zeroize" }
+serde = { module = "io.github.kotlinmania:serde-core", version.ref = "serde" }
 
 [bundles]
 ed25519-dalek-commonMain = [
@@ -44,4 +46,5 @@ ed25519-dalek-commonMain = [
   "sha2",
   "digest",
   "zeroize",
+  "serde",
 ]
